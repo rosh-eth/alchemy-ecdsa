@@ -11,11 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@noble/secp256k1": "^1.7.1",
     "cors": "^2.8.5",
     "ethereum-cryptography": "^1.2.0",
     "express": "^4.18.1",
-    "keccak": "^2.0.0",
     "secp256k1": "^4.0.2"
   },
   "devDependencies": {
