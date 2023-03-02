@@ -25,6 +25,21 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
     }
   }
 
+  async function handleAddress(evt) {
+    const address = evt.target.value;
+    setAddress(address);
+    
+
+    if (address) {
+      const {
+        data: { balance },
+      } = await server.get(`balance/${address}`);
+      setBalance(balance);
+    } else {
+      setBalance(0);
+    }
+  }
+
   return (
     <div className="container wallet">
       <h1>Your Wallet</h1>
@@ -32,6 +47,10 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
       <label>
         Private Key
         <input placeholder="Type a privatekey" value={privateKey} onChange={onChange}></input>
+      </label>
+      <label>
+        Address
+        <input placeholder="Type a address" value={address} onChange={handleAddress}></input>
       </label>
       <div>
         Address: {address}
