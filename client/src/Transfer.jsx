@@ -1,5 +1,23 @@
+import { keccak256 } from "ethereum-cryptography/keccak";
+import * as secp from "ethereum-cryptography/secp256k1";
+import { utf8ToBytes } from "ethereum-cryptography/utils";
 import { useState } from "react";
 import server from "./server";
+
+function hashMsg(msg) {
+  return keccak256(utf8ToBytes(msg));
+}
+
+function signMsg(msg, privateKey) {
+  const msgHash = hashMsg(msg);
+  return secp.sign(msgHash, privateKey, { recovered: true });
+}
+
+async function recoverKey(msg, signature, recoveryBit) {
+  const msgHash = hashMsg(msg);
+  const publicKey = secp.recover(msgHash, signature, recoveryBit);
+  return secp.getPublicKey(privateKey);
+}
 
 function Transfer({
   address,
