@@ -1,9 +1,17 @@
 import { useState } from "react";
 import server from "./server";
 
-function Transfer({ address, setBalance }) {
-  const [sendAmount, setSendAmount] = useState("");
-  const [recipient, setRecipient] = useState("");
+function Transfer({
+  address,
+  setBalance,
+  privateKey,
+  signature,
+  setSignature,
+  recoveryBit,
+  setRecoveryBit,
+}) {
+  const [sendAmount, setSendAmount] = useState(10);
+  const [recipient, setRecipient] = useState("0x2");
 
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
@@ -29,20 +37,20 @@ function Transfer({ address, setBalance }) {
       <h1>Send Transaction</h1>
 
       <label>
-        Send Amount
-        <input
-          placeholder="1, 2, 3..."
-          value={sendAmount}
-          onChange={setValue(setSendAmount)}
-        ></input>
-      </label>
-
-      <label>
         Recipient
         <input
           placeholder="Type an address, for example: 0x2"
           value={recipient}
           onChange={setValue(setRecipient)}
+        ></input>
+      </label>
+
+      <label>
+        Send Amount
+        <input
+          placeholder="1, 2, 3..."
+          value={sendAmount}
+          onChange={setValue(setSendAmount)}
         ></input>
       </label>
 
