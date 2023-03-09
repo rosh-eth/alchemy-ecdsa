@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 const secp = require("ethereum-cryptography/secp256k1");
-const keccak256 = require("ethereum-cryptography/keccak");
+const { keccak256 } = require("ethereum-cryptography/keccak");
 const { utf8ToBytes } = require("ethereum-cryptography/utils");
 
 const balances = {
@@ -26,7 +26,16 @@ app.get("/balance/:address", (req, res) => {
 });
 
 app.post("/send", (req, res) => {
-  const { sender, recipient, amount } = req.body;
+  const { sender, recipient, amount, signature, message, recoveryBit } =
+    req.body;
+
+  console.log(req.body);
+
+  // const recoveredKey = recoverKey(message, signature, recoveryBit);
+  // const recoveredAddress = getEthAddress(recoveredKey);
+  // console.log(recoveredAddress);
+
+  // console.log(recoveredKey);
 
   setInitialBalance(sender);
   setInitialBalance(recipient);
@@ -54,13 +63,12 @@ function hashMsg(msg) {
   return keccak256(utf8ToBytes(msg));
 }
 
-function signMsg(msg, privateKey) {
-  const msgHash = hashMsg(msg);
-  return secp.sign(msgHash, privateKey, { recovered: true });
-}
-
 async function recoverKey(msg, signature, recoveryBit) {
   const msgHash = hashMsg(msg);
-  const publicKey = secp.recover(msgHash, signature, recoveryBit);
-  return secp.getPublicKey(privateKey);
+  const publicKey = secp.recoverPublicKey(msgHash, signature, recoveryBit);
+  return publicKey;
+}
+
+function getEthAddress(publicKey) {
+  return `0x` + toHex(keccak256(publicKey.slice(1)).slice(-20));
 }

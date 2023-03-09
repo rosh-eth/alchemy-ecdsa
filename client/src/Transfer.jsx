@@ -4,31 +4,19 @@ import { utf8ToBytes } from "ethereum-cryptography/utils";
 import { useState } from "react";
 import server from "./server";
 
+const message = "please send me some money";
+
 function hashMsg(msg) {
   return keccak256(utf8ToBytes(msg));
 }
 
-function signMsg(msg, privateKey) {
+async function signMsg(msg, privateKey) {
   const msgHash = hashMsg(msg);
-  return secp.sign(msgHash, privateKey, { recovered: true });
+  return await secp.sign(msgHash, privateKey, { recovered: true });
 }
 
-async function recoverKey(msg, signature, recoveryBit) {
-  const msgHash = hashMsg(msg);
-  const publicKey = secp.recover(msgHash, signature, recoveryBit);
-  return secp.getPublicKey(privateKey);
-}
-
-function Transfer({
-  address,
-  setBalance,
-  privateKey,
-  signature,
-  setSignature,
-  recoveryBit,
-  setRecoveryBit,
-}) {
-  const [sendAmount, setSendAmount] = useState(10);
+function Transfer({ address, setBalance, privateKey }) {
+  const [sendAmount, setSendAmount] = useState(1);
   const [recipient, setRecipient] = useState("0x2");
 
   const setValue = (setter) => (evt) => setter(evt.target.value);
@@ -36,11 +24,20 @@ function Transfer({
   async function transfer(evt) {
     evt.preventDefault();
 
+    const [signature, recoveryBit] = await signMsg(message, privateKey);
+    const stringSignature = signature.toString();
+
+    console.log("signature", stringSignature);
+    console.log("recoveryBit", recoveryBit);
+
     try {
       const {
         data: { balance },
       } = await server.post(`send`, {
         sender: address,
+        stringSignature,
+        message,
+        recoveryBit: parseInt(recoveryBit),
         amount: parseInt(sendAmount),
         recipient,
       });

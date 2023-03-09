@@ -7,8 +7,6 @@ function App() {
   const [balance, setBalance] = useState(0);
   const [address, setAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
-  const [signature, setSignature] = useState("");
-  const [recoveryBit, setRecoveryBit] = useState(0);
 
   return (
     <div className="app">
@@ -24,10 +22,6 @@ function App() {
         setBalance={setBalance}
         address={address}
         privateKey={privateKey}
-        signature={signature}
-        setSignature={setSignature}
-        recoveryBit={recoveryBit}
-        setRecoveryBit={setRecoveryBit}
       />
     </div>
   );
