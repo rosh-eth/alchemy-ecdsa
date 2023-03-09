@@ -26,10 +26,31 @@ app.get("/balance/:address", (req, res) => {
 });
 
 app.post("/send", (req, res) => {
-  const { sender, recipient, amount, signature, message, recoveryBit } =
+  const { sender, recipient, amount, stringSignature, message, recoveryBit } =
     req.body;
 
   console.log(req.body);
+
+  const JsonToArray = function (json) {
+    let str = json.split(",");
+
+    return str;
+  };
+
+  const newSignature = JsonToArray(stringSignature);
+
+  const arrayToUint8 = function (arr) {
+    let ret = new Uint8Array(arr.length);
+    for (var i = 0; i < arr.length; i++) {
+      ret[i] = arr[i];
+    }
+    return ret;
+  };
+
+  const y = arrayToUint8(newSignature);
+
+  console.log(newSignature);
+  console.log(y);
 
   // const recoveredKey = recoverKey(message, signature, recoveryBit);
   // const recoveredAddress = getEthAddress(recoveredKey);
