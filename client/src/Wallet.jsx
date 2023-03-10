@@ -50,9 +50,9 @@ function Wallet({
     <div className="container wallet">
       <h1>Your Wallet</h1>
 
-      <small>
+      {/* <small>
         025ffc936cd03d7b18031c8ca603d9ba3e3b3b05077a77279e95337ba7ba9d3b
-      </small>
+      </small> */}
       <label>
         Private Key
         <input
