@@ -15,9 +15,9 @@ const balances = {
   "0x1": 100,
   "0x2": 50,
   "0x3": 75,
-  "0xf73e678189af8dd53d03b1021a8b89c6c70d98dd": 10,
+  "0xbe9d7fb836ed9f10dac0d2efb023cae9c25d6d86": 10,
   "0x39a6b315be92df5c22654c727bb145efd5c84028": 120,
-  "0x7dd9113770852f83ec75575ab262d3297caff9eb": 30,
+  "0x4325715238f5dfe7f2d018ff2cf2615ac17fbb78": 30,
 };
 
 app.get("/balance/:address", (req, res) => {
