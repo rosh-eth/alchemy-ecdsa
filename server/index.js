@@ -51,20 +51,21 @@ app.post("/send", (req, res) => {
   const recoveredKey = recoverKey(message, uin8signature, recoveryBit);
 
   const recoveredAddress = getEthAddress(recoveredKey);
-  console.log(recoveredAddress);
 
-  // console.log("recoveredKey: ", recoveredKey);
-  // console.log(`recoveredKey type: `, typeof recoveredKey);
-
-  setInitialBalance(sender);
-  setInitialBalance(recipient);
-
-  if (balances[sender] < amount) {
-    res.status(400).send({ message: "Not enough funds!" });
+  if (sender !== recoveredAddress) {
+    console.log("Invalid signature!");
   } else {
-    balances[sender] -= amount;
-    balances[recipient] += amount;
-    res.send({ balance: balances[sender] });
+    console.log("Success!");
+    setInitialBalance(sender);
+    setInitialBalance(recipient);
+
+    if (balances[sender] < amount) {
+      res.status(400).send({ message: "Not enough funds!" });
+    } else {
+      balances[sender] -= amount;
+      balances[recipient] += amount;
+      res.send({ balance: balances[sender] });
+    }
   }
 });
 
@@ -85,7 +86,6 @@ function hashMsg(msg) {
 function recoverKey(msg, signature, recoveryBit) {
   const msgHash = hashMsg(msg);
   const publicKey = secp.recoverPublicKey(msgHash, signature, recoveryBit);
-  console.log(`publicKey: `, publicKey);
   return publicKey;
 }
 
