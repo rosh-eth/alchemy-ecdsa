@@ -27,8 +27,8 @@ function Transfer({ address, setBalance, privateKey }) {
     const [signature, recoveryBit] = await signMsg(message, privateKey);
     const stringSignature = signature.toString();
 
-    console.log("signature", stringSignature);
-    console.log("recoveryBit", recoveryBit);
+    // const publicKey = secp.getPublicKey(privateKey);
+    // console.log("publicKey", publicKey);
 
     try {
       const {

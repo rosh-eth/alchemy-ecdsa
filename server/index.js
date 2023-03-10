@@ -9,6 +9,7 @@ app.use(express.json());
 const secp = require("ethereum-cryptography/secp256k1");
 const { keccak256 } = require("ethereum-cryptography/keccak");
 const { utf8ToBytes } = require("ethereum-cryptography/utils");
+const { toHex } = require("ethereum-cryptography/utils");
 
 const balances = {
   "0x1": 100,
@@ -29,8 +30,6 @@ app.post("/send", (req, res) => {
   const { sender, recipient, amount, stringSignature, message, recoveryBit } =
     req.body;
 
-  console.log(req.body);
-
   const JsonToArray = function (json) {
     let str = json.split(",");
 
@@ -47,16 +46,15 @@ app.post("/send", (req, res) => {
     return ret;
   };
 
-  const y = arrayToUint8(newSignature);
+  const uin8signature = arrayToUint8(newSignature);
 
-  console.log(newSignature);
-  console.log(y);
+  const recoveredKey = recoverKey(message, uin8signature, recoveryBit);
 
-  // const recoveredKey = recoverKey(message, signature, recoveryBit);
-  // const recoveredAddress = getEthAddress(recoveredKey);
-  // console.log(recoveredAddress);
+  const recoveredAddress = getEthAddress(recoveredKey);
+  console.log(recoveredAddress);
 
-  // console.log(recoveredKey);
+  // console.log("recoveredKey: ", recoveredKey);
+  // console.log(`recoveredKey type: `, typeof recoveredKey);
 
   setInitialBalance(sender);
   setInitialBalance(recipient);
@@ -84,9 +82,10 @@ function hashMsg(msg) {
   return keccak256(utf8ToBytes(msg));
 }
 
-async function recoverKey(msg, signature, recoveryBit) {
+function recoverKey(msg, signature, recoveryBit) {
   const msgHash = hashMsg(msg);
   const publicKey = secp.recoverPublicKey(msgHash, signature, recoveryBit);
+  console.log(`publicKey: `, publicKey);
   return publicKey;
 }
 
